@@ -1,0 +1,46 @@
+{# templates/user_stats/index.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}User Gender Statistics{% endblock %}
+
+{% block body %}
+    <h1>User Gender Statistics</h1>
+    <canvas id="genderChart" width="400" height="200"></canvas>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var ctx = document.getElementById('genderChart').getContext('2d');
+        var genderData = {{ genderStats|json_encode|raw }};
+
+        var labels = genderData.map(item => item.gender);
+        var data = genderData.map(item => item.count);
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Gender Distribution',
+                    data: data,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+{% endblock %}
